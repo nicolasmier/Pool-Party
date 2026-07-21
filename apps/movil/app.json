@@ -1,0 +1,18 @@
+{
+  "expo": {
+    "name": "LocalSports Socios",
+    "slug": "localsports-socios",
+    "scheme": "localsports",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#0c7d73"
+    },
+    "ios": { "supportsTablet": true },
+    "android": {
+      "package": "com.localsports.socios"
+    }
+  }
+}

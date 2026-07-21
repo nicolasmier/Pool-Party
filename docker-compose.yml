@@ -1,0 +1,21 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: localsports-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: localsports
+      POSTGRES_PASSWORD: localsports
+      POSTGRES_DB: localsports
+    ports:
+      - "5432:5432"
+    volumes:
+      - localsports_db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U localsports"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  localsports_db:

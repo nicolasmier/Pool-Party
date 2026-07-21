@@ -1,0 +1,65 @@
+// Esquema de datos — LocalSports (versión básica)
+// Empezamos por lo básico: cuenta de acceso + perfil personal + roles.
+// El resto de entidades (reservas, natación, etc.) se añadirán por fases,
+// según el plan del dosier (investigacion/06-plan-desarrollo.md).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Roles del sistema (RBAC)
+// ─────────────────────────────────────────────────────────────
+
+enum Rol {
+  SOCIO
+  TUTOR
+  RECEPCION
+  TECNICO_SALA
+  MONITOR_NATACION
+  MANTENIMIENTO
+  COORDINADOR
+  ADMIN
+}
+
+// ─────────────────────────────────────────────────────────────
+// Cuenta de acceso
+// ─────────────────────────────────────────────────────────────
+
+model Usuario {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  contrasena   String // hash bcrypt
+  roles        Rol[]    @default([SOCIO])
+  activo       Boolean  @default(true)
+  creadoEn     DateTime @default(now())
+  actualizadoEn DateTime @updatedAt
+
+  perfil Perfil?
+}
+
+// ─────────────────────────────────────────────────────────────
+// Perfil personal (datos típicos + foto opcional)
+// ─────────────────────────────────────────────────────────────
+
+model Perfil {
+  id             String   @id @default(cuid())
+  usuarioId      String   @unique
+  usuario        Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  nombre         String
+  apellidos      String
+  fechaNacimiento DateTime?
+  telefono       String?
+  direccion      String?
+  // Foto de perfil: opcional, solo si el usuario quiere subirla.
+  fotoUrl        String?
+
+  creadoEn       DateTime @default(now())
+  actualizadoEn  DateTime @updatedAt
+}
